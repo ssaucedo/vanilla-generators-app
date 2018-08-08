@@ -1,0 +1,63 @@
+/* Teal Green #175873 */ 
+/* Teal #2B7C85 */ 
+/* Seafoam Green #87ACA3 */
+/* Royal Blue #0C1446 */
+
+.container {
+    display: flex;
+    flex-direction: column;
+}
+
+.box-container {
+    display: flex;
+    padding: 4rem;
+    justify-content: center;
+}
+
+.box-container > div {
+    text-align: center;
+    height: 8rem;
+    width: 8rem;
+    margin: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.box-one {
+    color: white;
+    background-color: #175873;
+}
+
+.box-two {
+    color: white;
+    background-color: #2B7C85;
+}
+
+.box-three {
+    color: white;
+    background-color: #87ACA3;
+}
+
+.box-four {
+    color: white;
+    background-color: #0C1446;
+}
+
+.step-completed {
+    cursor: unset !important;
+}
+
+.flow-completed {
+    color: orange;
+    font-size: xx-large;
+    align-self: center;
+}
+
+.restart {
+    font-size: xx-large;
+    align-self: center;
+    cursor: pointer;
+    margin: 2rem;
+}

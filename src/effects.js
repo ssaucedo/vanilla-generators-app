@@ -1,0 +1,5 @@
+
+export const EFFECTS = {
+	USER_ACTION: 'USER_ACTION',
+	CONTEXT_UPDATE: 'CONTEXT_UPDATE',
+};
