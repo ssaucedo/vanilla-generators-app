@@ -3,9 +3,26 @@
 /* Seafoam Green #87ACA3 */
 /* Royal Blue #0C1446 */
 
+html, 
+body {
+    height: 100%;
+    margin: 0px;
+}
+
 .container {
     display: flex;
+    height: 100%;
+}
+
+.app {
+    flex: 2;
     flex-direction: column;
+}
+
+.editor {
+    flex: 1;
+    width: 100%;
+    min-width: 620px;
 }
 
 .box-container {
@@ -23,6 +40,12 @@
     align-items: center;
     justify-content: center;
     cursor: pointer;
+}
+
+.completion-elements {
+    text-align: center;
+    padding: 4rem;
+    
 }
 
 .box-one {

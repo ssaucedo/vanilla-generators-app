@@ -4,7 +4,7 @@
   "description": "vanilla js app where user flows are coordinated by generators",
   "main": "index.js",
   "scripts": {
-    "build": "rollup -c && cp src/style.css dist && cp src/index.html dist",
+    "build": "rollup -c && cp -a resources/. dist/ && echo src/style.css src/index.html | xargs -n 1 -I@  cp @ dist/",
     "dev": "rollup -c --watch"
   },
   "keywords": [

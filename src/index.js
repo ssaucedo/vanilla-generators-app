@@ -4,8 +4,41 @@ import { EFFECTS } from './effects';
 
 window.onload = function (e) {
 	init();
-	var editor = CodeMirror(document.body, {
-		value: "function myScript(){return 100;}\n",
+	var editor = CodeMirror(document.getElementById('editor'), {
+		value: `	
+function* demoUserFlow() {
+	yield userAction({
+		event: 'click', id: 'box-one', reaction: function (event) {
+			console.log('This is the very first reaction');
+			stepCompleted('box-one');
+		}
+	});
+	yield userAction({
+		event: 'click', id: 'box-two', reaction: function (event) {
+			console.log('This is the second reaction')
+			stepCompleted('box-two');
+		}
+	});
+	yield userAction({
+		event: 'click', id: 'box-three', reaction: function (event) {
+			console.log('This is the third reaction')
+			stepCompleted('box-three');
+		}
+	});
+	yield userAction({
+		event: 'click', id: 'box-four', reaction: function (event) {
+			console.log('This is the last reaction')
+			stepCompleted('box-four');
+			createFlowCompletedElement('flow-completed');
+			createRestartElement('restart');		
+		}
+	});
+	yield userAction({
+		event: 'click', id: 'restart', reaction: function (event) {
+			window.location.reload();		
+		}
+	});
+}`,
 		mode:  "javascript",
 		lineNumbers: true,
     	styleActiveLine: true,
@@ -29,13 +62,12 @@ const contextUpdate = (obj) => ({
 	...obj,
 });
 
-
 const createFlowCompletedElement = (id) => {
 	const newDiv = document.createElement('div'); 
 	newDiv.id = id;
 	newDiv.appendChild(document.createTextNode("Congratulations, flow completed"));
 	newDiv.classList.add('flow-completed');	
-	document.getElementById('container').appendChild(newDiv);
+	document.getElementById('completion-elements').appendChild(newDiv);
 };
 
 const createRestartElement = (id) => {
@@ -43,9 +75,8 @@ const createRestartElement = (id) => {
 	newDiv.id = id;
 	newDiv.innerText = "💀";
 	newDiv.classList.add('restart');	
-	document.getElementById('container').appendChild(newDiv);
+	document.getElementById('completion-elements').appendChild(newDiv);
 }
-
 
 // Helper for element deletion
 const deleteElement = (id) => {
