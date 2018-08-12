@@ -4,64 +4,83 @@ import { EFFECTS } from './effects';
 
 window.onload = function (e) {
 	init();
-	var editor = CodeMirror(document.getElementById('editor'), {
+}
+
+function init() {
+	executor(demoUserFlow());
+	CodeMirror(document.getElementById('editor'), {
 		value: `	
+
+
 function* demoUserFlow() {
-	yield userAction({
-		event: 'click', id: 'box-one', reaction: function (event) {
-			console.log('This is the very first reaction');
-			stepCompleted('box-one');
-		}
-	});
-	yield userAction({
-		event: 'click', id: 'box-two', reaction: function (event) {
-			console.log('This is the second reaction')
-			stepCompleted('box-two');
-		}
-	});
-	yield userAction({
-		event: 'click', id: 'box-three', reaction: function (event) {
-			console.log('This is the third reaction')
-			stepCompleted('box-three');
-		}
-	});
-	yield userAction({
-		event: 'click', id: 'box-four', reaction: function (event) {
-			console.log('This is the last reaction')
-			stepCompleted('box-four');
-			createFlowCompletedElement('flow-completed');
-			createRestartElement('restart');		
-		}
-	});
-	yield userAction({
-		event: 'click', id: 'restart', reaction: function (event) {
-			window.location.reload();		
-		}
-	});
-}`,
+	yield waitForUserInteraction({ event: 'click', id: 'box-one' });
+	console.log('This is the very first interaction');
+	stepCompleted('box-one');
+	
+	yield waitForUserInteraction({ event: 'click', id: 'box-two' });
+	console.log('This is the second interaction')
+	stepCompleted('box-two');
+	
+	yield waitForUserInteraction({ event: 'click', id: 'box-three' });
+	console.log('This is the third interaction')
+	stepCompleted('box-three');
+	
+	yield waitForUserInteraction({ event: 'click', id: 'box-four'});
+	console.log('This is the last interaction')
+	stepCompleted('box-four');
+	createFlowCompletedElement('flow-completed');
+	createRestartElement('restart');
+	
+	yield waitForUserInteraction({ event: 'click', id: 'restart' });
+	window.location.reload();
+}
+
+/**
+ *  HELPERS
+ */
+
+// DOM manipulation.
+const stepCompleted = (id) => {
+	const element = document.getElementById(id);
+	element.className = 'step-completed';
+	element.innerText = "🎉";
+};
+
+// DOM manipulation.
+const createFlowCompletedElement = (id) => {
+	const newDiv = document.createElement('div'); 
+	newDiv.id = id;
+	newDiv.appendChild(document.createTextNode(
+		"Congratulations, flow completed"));
+	newDiv.classList.add('flow-completed');	
+	document.getElementById('completion-elements').appendChild(newDiv);
+};
+
+// DOM manipulation.
+const createRestartElement = (id) => {
+	const newDiv = document.createElement('div'); 
+	newDiv.id = id;
+	newDiv.innerText = "💀";
+	newDiv.classList.add('restart');	
+	document.getElementById('completion-elements').appendChild(newDiv);
+}
+`,
 		mode:  "javascript",
 		lineNumbers: true,
     	styleActiveLine: true,
 		matchBrackets: true,
 		theme: 'darcula'
 	  });
-}
-
-function init() {
-	const context = { count: 1 };
-	executor(demoUserFlow(), context);
 };
 
-const userAction = (obj) => ({
-	type: EFFECTS.USER_ACTION,
+const waitForUserInteraction = (obj) => ({
+	type: EFFECTS.USER_INTERACTION,
 	...obj,
 });
 
-const contextUpdate = (obj) => ({
-	type: EFFECTS.CONTEXT_UPDATE,
-	...obj,
-});
-
+/**
+ *  DOM manipulation.
+ */
 const createFlowCompletedElement = (id) => {
 	const newDiv = document.createElement('div'); 
 	newDiv.id = id;
@@ -70,6 +89,9 @@ const createFlowCompletedElement = (id) => {
 	document.getElementById('completion-elements').appendChild(newDiv);
 };
 
+/**
+ *  DOM manipulation.
+ */
 const createRestartElement = (id) => {
 	const newDiv = document.createElement('div'); 
 	newDiv.id = id;
@@ -78,11 +100,9 @@ const createRestartElement = (id) => {
 	document.getElementById('completion-elements').appendChild(newDiv);
 }
 
-// Helper for element deletion
-const deleteElement = (id) => {
-	document.getElementById(id).remove();
-};
-
+/**
+ *  DOM manipulation.
+ */
 const stepCompleted = (id) => {
 	const element = document.getElementById(id);
 	element.className = 'step-completed';
@@ -90,36 +110,24 @@ const stepCompleted = (id) => {
 };
 
 function* demoUserFlow() {
-	yield userAction({
-		event: 'click', id: 'box-one', reaction: function (event) {
-			console.log('This is the very first reaction');
-			stepCompleted('box-one');
-		}
-	});
-	yield userAction({
-		event: 'click', id: 'box-two', reaction: function (event) {
-			console.log('This is the second reaction')
-			stepCompleted('box-two');
-		}
-	});
-	yield userAction({
-		event: 'click', id: 'box-three', reaction: function (event) {
-			console.log('This is the third reaction')
-			stepCompleted('box-three');
-		}
-	});
-	yield userAction({
-		event: 'click', id: 'box-four', reaction: function (event) {
-			console.log('This is the last reaction')
-			stepCompleted('box-four');
-			createFlowCompletedElement('flow-completed');
-			createRestartElement('restart');
-			
-		}
-	});
-	yield userAction({
-		event: 'click', id: 'restart', reaction: function (event) {
-			window.location.reload();		
-		}
-	});
+	yield waitForUserInteraction({ event: 'click', id: 'box-one' });
+	console.log('This is the very first interaction');
+	stepCompleted('box-one');
+	
+	yield waitForUserInteraction({ event: 'click', id: 'box-two' });
+	console.log('This is the second interaction')
+	stepCompleted('box-two');
+	
+	yield waitForUserInteraction({ event: 'click', id: 'box-three' });
+	console.log('This is the third interaction')
+	stepCompleted('box-three');
+	
+	yield waitForUserInteraction({ event: 'click', id: 'box-four'});
+	console.log('This is the last interaction')
+	stepCompleted('box-four');
+	createFlowCompletedElement('flow-completed');
+	createRestartElement('restart');
+	
+	yield waitForUserInteraction({ event: 'click', id: 'restart' });
+	window.location.reload();
 }

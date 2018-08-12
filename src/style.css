@@ -22,13 +22,14 @@ body {
 .editor {
     flex: 1;
     width: 100%;
-    min-width: 620px;
+    min-width: 640px;
 }
 
 .box-container {
     display: flex;
     padding: 4rem;
     justify-content: center;
+    flex-wrap:wrap;
 }
 
 .box-container > div {
@@ -40,12 +41,6 @@ body {
     align-items: center;
     justify-content: center;
     cursor: pointer;
-}
-
-.completion-elements {
-    text-align: center;
-    padding: 4rem;
-    
 }
 
 .box-one {
@@ -70,6 +65,10 @@ body {
 
 .step-completed {
     cursor: unset !important;
+}
+
+.completion-elements {
+    text-align: center;    
 }
 
 .flow-completed {

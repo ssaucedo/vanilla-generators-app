@@ -1,21 +1,25 @@
 import { EFFECTS } from './effects';
 
-export const executor = (gen, context) => {
-	let next = gen.next();
-	if (next.done === true) {
+// warning: SIDE EFFECTS.
+export const executor = (gen, res) => {
+	let {value, done} = gen.next(res);
+	if (done === true) {
 		return;
 	} else {
-		const { value } = next;
-		if (value.type === EFFECTS.USER_ACTION) {
+		if (value.type === EFFECTS.USER_INTERACTION) {
 			if (value.event === 'click') {
 				const element = document.getElementById(value.id);
-				element.addEventListener('click', (event) => {
-					value.reaction(event);
-					executor(gen, context);
-				}, { once: true });
+				new Promise((res, rej) => {
+					element.addEventListener('click', (event) => {
+						executor(gen, res);
+					}, { once: true });
+				})
+				
+			} else {
+				console.error('Not supported interaction');
 			}
-		} else if (value.type === EFFECTS.CONTEXT_UPDATE) {
-			executor(gen, value.update(context));
+		} else {
+			console.error('Not supported effect');
 		}
 	}
 };
