@@ -1,0 +1,324 @@
+
+
+
+
+As front end developers:
+
+
+
+What do we do (I) when facing new applications:
+
+By new applications I mean a sourcecode coded by another developers new for us by devs that may no longer be in the organization.
+
+
+
+Application discovery process:
+
+
+Tech side (repo domain)
+
+Surface:
+
+- Check the stack
+	Probably reading package.json file.
+
+-  General testing state.
+	Unit, Integration, E2E,
+
+-  Folders organization.
+
+Deeper:
+
+- Async
+
+- Routing
+
+- Overall side effects handling.
+
+- Layers separation.
+
+
+App side:
+
+- App state
+	- Data,
+	- App state, 
+	- UI state,
+
+- User flows (On ux terms)
+
+- Error handling strategies (On ux terms)
+
+
+---------------------------------------------------
+
+On this situation we consider a front end app, that contains multiple user flows that cannot be executed on a concurrent way. The user can only execute
+one user flow at a time.
+
+Example discover steps:
+
+    1) Tech side.
+    2) User side.
+
+
+About 2)
+
+The most common approach is to set up the app locally or playing around with a deployed instance. So what happens there:
+
+- You play with the app using an user with certain properties (such roles, permissions etc).
+- You discover some (potencially all) user flows for that user. (User flows migth be disabled for some users).
+- You try to make the mapping between those flows to code.
+
+
+
+For complex applications which have multiple flows this is a hard task specially is there is not a well defined pattern amongst different user flows.
+By the end of the process the developer 'knows' the codebase, that means that now he is capable of:
+
+- Adding new user flows.
+- Extending user flows.
+- Fixing bugs.
+
+---------------------------------------------------
+
+
+As front end developers we should keep an eye on mantaining the mapping between user flows to code easy as posible. Why?
+
+
+- Discovery
+- etc
+- etc
+
+----------------------------------------------
+
+
+Keeping a mapping between user flows to code is important for multiple reasons:
+
+- Super easy onboarding for new comers.
+- We are not discovering again and again how a user flow is implemented in the codebase. It's not a matter of remembering how a particular one is implemented, you just go to a single place and take a look.
+	Having a single file that contains the logic to coordinte the user flow plus the neccesary async operations, when there is a complaint a requests or just a simple question from any stakeholder on what
+	is happening at certain time when the user performs an interaction .... complete this.
+- Testing.
+
+
+
+----------------------------------------------
+
+Real world situtations:
+
+
+Naming:
+
+	FLOW = User Flow Interactions + Required async operations + Application state mutations.
+
+React + thunks:
+
+Thunks is pattern that usually involves trigerring a reaction from an user interaction. Under this pattern flows are composed by multiple thunks, and each one is registered as a callback for an user interaction.
+This means that when we have to work on a flow that is composed by multiple steps we have to:
+
+Re compose this flow, that exists but is spread on multiple thunks (maybe multiple files) and where the sequence of interactions and operations is not clear.
+
+For instance when you have a flow that involves:
+	- Completing a form.
+        - Clicking on save
+	- Confirmation modal action. (Cancel or Confirm)
+	- Displaying operation result. (Show close button)
+        - Closing the modal.
+
+
+When you look into the code what you really have is:
+
+
+One callback on presentational layer that dispatches saveForm() thunk on click on 'Save button'
+	saveForm():
+		Saves form information on application state.
+		Opens the modal.
+One callback handled to modal component that dispatches userConfirmation() thunk when user clicks on 'Cancel' or 'Confirm'
+	userConfirmation():
+		On cancellation: The modal is closed.
+		On confirmation: 
+				An async operation is executed. During that, application state is updated to display some feedback to the user.
+				Once the operation is completed application state is updated so the modal can display the 'Close' button.
+
+One callback handled to the modal to execute on 'Close' button click.
+	userCloseModal():
+		Closes modal. Updating application state.
+		Perform any related operation. Metrics, state cleanup, state refresh etc.
+
+
+This example takes as granted that the application uses redux to handle UI state. (Modal open/closed state and async operation state i.e isLoading flag for modal).
+On this implementation the user developer need to mentally keep track of this sequence of thunks. Analyze a thunk on it's own does not provide to much information, the context is what matters.
+
+On this patterns the order of steps or operations in the flow is only guranteed by the presentational layer, there is no logic there that makes sure that the sequence is the desired one.
+
+
+----------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Redux, react and redux sagas.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Mapping User flows to Code.
+
+
+
+
+
+
+
+
+
+
+
+
+
+The problem.
+
+
+
+How:
+
+
+
+An example:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
