@@ -9,32 +9,31 @@ window.onload = function (e) {
 function init() {
 	executor(demoUserFlow());
 	CodeMirror(document.getElementById('editor'), {
-		value: `	
-
+		value: `
 
 function* demoUserFlow() {
-	yield waitForUserInteraction({ event: 'click', id: 'box-one' });
+	yield waitFor('click').on('box-one');
 	console.log('This is the very first interaction');
 	stepCompleted('box-one');
 	
-	yield waitForUserInteraction({ event: 'click', id: 'box-two' });
+	yield waitFor('click').on('box-two');
 	console.log('This is the second interaction')
 	stepCompleted('box-two');
 	
-	yield waitForUserInteraction({ event: 'click', id: 'box-three' });
+	yield waitFor('click').on('box-three');
 	console.log('This is the third interaction')
 	stepCompleted('box-three');
 	
-	yield waitForUserInteraction({ event: 'click', id: 'box-four'});
+	yield waitFor('click').on('box-four');
 	console.log('This is the last interaction')
 	stepCompleted('box-four');
 	createFlowCompletedElement('flow-completed');
 	createRestartElement('restart');
-	
-	yield waitForUserInteraction({ event: 'click', id: 'restart' });
+
+	yield waitFor('click').on('restart');
+
 	window.location.reload();
 }
-
 /**
  *  HELPERS
  */
@@ -73,10 +72,13 @@ const createRestartElement = (id) => {
 	  });
 };
 
-const waitForUserInteraction = (obj) => ({
-	type: EFFECTS.USER_INTERACTION,
-	...obj,
-});
+const waitFor = (event) => ({
+	on: (elementId) => ({
+		type: EFFECTS.USER_INTERACTION,
+		id: elementId,
+		event,
+	})
+})
 
 /**
  *  DOM manipulation.
@@ -110,24 +112,25 @@ const stepCompleted = (id) => {
 };
 
 function* demoUserFlow() {
-	yield waitForUserInteraction({ event: 'click', id: 'box-one' });
+	yield waitFor('click').on('box-one');
 	console.log('This is the very first interaction');
 	stepCompleted('box-one');
 	
-	yield waitForUserInteraction({ event: 'click', id: 'box-two' });
+	yield waitFor('click').on('box-two');
 	console.log('This is the second interaction')
 	stepCompleted('box-two');
 	
-	yield waitForUserInteraction({ event: 'click', id: 'box-three' });
+	yield waitFor('click').on('box-three');
 	console.log('This is the third interaction')
 	stepCompleted('box-three');
 	
-	yield waitForUserInteraction({ event: 'click', id: 'box-four'});
+	yield waitFor('click').on('box-four');
 	console.log('This is the last interaction')
 	stepCompleted('box-four');
 	createFlowCompletedElement('flow-completed');
 	createRestartElement('restart');
-	
-	yield waitForUserInteraction({ event: 'click', id: 'restart' });
+
+	yield waitFor('click').on('restart');
+
 	window.location.reload();
 }
