@@ -7,26 +7,32 @@ window.onload = function (e) {
 }
 
 function init() {
-	executor(demoUserFlow());
+	executor(uniqueFlow());
 	CodeMirror(document.getElementById('editor'), {
 		value: `
 
-function* demoUserFlow() {
-	yield waitFor('click').on('box-one');
+function* uniqueFlow() {
+	yield waitFor('click').on('start-flow');
+	displayFlow('steps-container');
+	
+	yield waitFor('click').on('step-one');
 	console.log('This is the very first interaction');
-	stepCompleted('box-one');
+	stepCompleted('step-one');
 	
-	yield waitFor('click').on('box-two');
-	console.log('This is the second interaction')
-	stepCompleted('box-two');
+	let { target: { value }} = yield waitFor('input').on('step-two');
+	while(value.toUpperCase() !== 'MEETUP.JS') {
+		value = (yield waitFor('input').on('step-two')).target.value;
+	};
+	console.log('Correct password')
+	stepCompleted('step-two');
 	
-	yield waitFor('click').on('box-three');
+	yield waitFor('click').on('step-three');
 	console.log('This is the third interaction')
-	stepCompleted('box-three');
+	stepCompleted('step-three');
 	
-	yield waitFor('click').on('box-four');
+	yield waitFor('click').on('step-four');
 	console.log('This is the last interaction')
-	stepCompleted('box-four');
+	stepCompleted('step-four');
 	createFlowCompletedElement('flow-completed');
 	createRestartElement('restart');
 
@@ -34,35 +40,7 @@ function* demoUserFlow() {
 
 	window.location.reload();
 }
-/**
- *  HELPERS
- */
 
-// DOM manipulation.
-const stepCompleted = (id) => {
-	const element = document.getElementById(id);
-	element.className = 'step-completed';
-	element.innerText = "🎉";
-};
-
-// DOM manipulation.
-const createFlowCompletedElement = (id) => {
-	const newDiv = document.createElement('div'); 
-	newDiv.id = id;
-	newDiv.appendChild(document.createTextNode(
-		"Congratulations, flow completed"));
-	newDiv.classList.add('flow-completed');	
-	document.getElementById('completion-elements').appendChild(newDiv);
-};
-
-// DOM manipulation.
-const createRestartElement = (id) => {
-	const newDiv = document.createElement('div'); 
-	newDiv.id = id;
-	newDiv.innerText = "💀";
-	newDiv.classList.add('restart');	
-	document.getElementById('completion-elements').appendChild(newDiv);
-}
 `,
 		mode:  "javascript",
 		lineNumbers: true,
@@ -111,22 +89,37 @@ const stepCompleted = (id) => {
 	element.innerText = "🎉";
 };
 
-function* demoUserFlow() {
-	yield waitFor('click').on('box-one');
+/**
+ *  DOM manipulation.
+ */
+const displayFlow = (id) => {
+	const element = document.getElementById(id);
+	element.style.visibility = "unset" ;
+
+};
+
+function* uniqueFlow() {
+	yield waitFor('click').on('start-flow');
+	displayFlow('steps-container');
+	
+	yield waitFor('click').on('step-one');
 	console.log('This is the very first interaction');
-	stepCompleted('box-one');
+	stepCompleted('step-one');
 	
-	yield waitFor('click').on('box-two');
-	console.log('This is the second interaction')
-	stepCompleted('box-two');
+	let { target: { value }} = yield waitFor('input').on('step-two');
+	while(value.toUpperCase() !== 'MEETUP.JS') {
+		value = (yield waitFor('input').on('step-two')).target.value;
+	};
+	console.log('Correct password')
+	stepCompleted('step-two');
 	
-	yield waitFor('click').on('box-three');
+	yield waitFor('click').on('step-three');
 	console.log('This is the third interaction')
-	stepCompleted('box-three');
+	stepCompleted('step-three');
 	
-	yield waitFor('click').on('box-four');
+	yield waitFor('click').on('step-four');
 	console.log('This is the last interaction')
-	stepCompleted('box-four');
+	stepCompleted('step-four');
 	createFlowCompletedElement('flow-completed');
 	createRestartElement('restart');
 

@@ -7,11 +7,11 @@ export const executor = (gen, res) => {
 		return;
 	} else {
 		if (value.type === EFFECTS.USER_INTERACTION) {
-			if (value.event === 'click') {
+			if (value.event === 'click' || value.event === 'input') {
 				const element = document.getElementById(value.id);
 				new Promise((res, rej) => {
-					element.addEventListener('click', (event) => {
-						executor(gen, res);
+					element.addEventListener(value.event, (event) => {
+						executor(gen, event);
 					}, { once: true });
 				})
 				
